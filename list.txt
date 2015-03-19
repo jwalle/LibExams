@@ -1,0 +1,35 @@
+Easy :
+rotone
+rstr_capitalizer
+str_capitalizer
+ft_range
+ft_rrange
+last_word
+expand_str
+ulstr
+wdmatch
+ft_strdup
+hidenp
+
+Medium :
+inter
+fprime
+sort_int_tab
+rev_wstr
+str_maxlenoc
+union
+
+Hard :
+count_island
+ord_alphlong
+infin_add
+infin_mult
+sort_list
+rsort_params
+
+Very Hard :
+time_lord
+Half_life_3
+md5
+g_diam
+
