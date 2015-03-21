@@ -71,7 +71,7 @@ void init_stock(char **stock)
 	i = 0;
 	while (i < 1000)
 	{
-		stock[i] = (char *)malloc(1000);
+		stock[i] = (char *)malloc(100);
 		i++;
 	}
 }
