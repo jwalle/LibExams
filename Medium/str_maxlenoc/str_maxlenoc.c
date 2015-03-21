@@ -69,9 +69,9 @@ void init_stock(char **stock)
 	int i;
 
 	i = 0;
-	while (i < 1000)
+	while (i < 10)
 	{
-		stock[i] = (char *)malloc(100);
+		stock[i] = (char *)malloc(10);
 		i++;
 	}
 }
@@ -121,10 +121,10 @@ void str_maxlenoc(char **av ,int n, int (*f)(char *))
 		ret = find(ret, *av);
 		av++;
 	}*/
-	while (*stock)
+	while (stock[i])
 	{
-		printf("%s\n",*stock);
-		*stock++;
+		printf("%s\n", stock[i]);
+		i++;
 	}
 	//write(1, ret, ft_strlen(ret));
 }
