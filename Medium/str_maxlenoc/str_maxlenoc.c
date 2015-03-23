@@ -17,6 +17,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 int ft_strlen(char *str)
 {
@@ -29,12 +30,14 @@ char *ft_strnndup(char *str, int start, int end)
 	int i;
 
 	i = 0;
-	ret = (char *)malloc(sizeof(char) * (end - start)); 
+	ret = (char *)malloc(sizeof(char) * (end - start) + 1); 
 	while (start < end)
 	{
 		ret[i] = str[start];
 		start++;
+		i++;
 	}
+	ret[i] = '\0';
 	return (ret);
 }
 
@@ -50,6 +53,37 @@ int ft_strnncmp(char *s1, char *s2, int start, int end)
 }
 
 
+int ft_strcmp(char *s1, char *s2)
+{
+	int i;
+
+	i = 0;
+	while (s1[i] == s2[i])
+		i++;
+	return (s1[i] - s2[i]);
+}
+
+int ft_strstr(char *s1, char *s2)
+{
+	int i;
+	int j;
+
+	i = 0;
+	j = 0;
+	if (!s1 || !s2)
+		return (0);
+	while (s1[i] != s2[j])
+		i++;
+	while (s1[i] == s2[j])
+	{
+		i++;
+		j++;
+	}
+	if (i == ft_strlen(s2))
+		return (1);
+	return (0);
+}
+
 int find(char *current, char **stock)
 {
 	int i;
@@ -57,7 +91,7 @@ int find(char *current, char **stock)
 	i = 0;
 	while (stock[i])
 	{
-		if (!ft_strnncmp(stock[i], current, 0, ft_strlen(current)))
+		if (!ft_strcmp(stock[i], current))
 			return (1);
 		i++;
 	}
@@ -69,20 +103,23 @@ void init_stock(char **stock)
 	int i;
 
 	i = 0;
-	while (i < 10)
+	while (i < 100)
 	{
-		stock[i] = (char *)malloc(10);
+		stock[i] = (char *)malloc(100);
+		stock[i][0] = '\0';
 		i++;
 	}
 }
 
-void fill_stock(char **stock, char *first)
+int fill_stock(char **stock, char *first, int *len)
 {
 	int i;
-	int j;
 	char *temp;
 	int start;
 	int end = 1;
+	int count;
+
+	count = 0;
 	i = 0;
 	while (end <= ft_strlen(first))
 	{
@@ -90,43 +127,75 @@ void fill_stock(char **stock, char *first)
 		while (start < end)
 		{		
 			temp = ft_strnndup(first, start, end); 
-			if (!find(temp, stock))
-				stock[i++] = ft_strnndup(first, start, end);
+			if (!find(temp, stock) || count == 0)
+			{
+				//printf("temp = %s\n", temp);
+				stock[i] = strdup(temp);
+				len[i] = strlen(temp);
+				count++;
+				i++;
+			}
 			free(temp);
 			start++;
 		}
 		end++;
 	}
+	return (count);
 }
 
 
 void str_maxlenoc(char **av ,int n, int (*f)(char *))
 {
 	int i;
+	int count;
 	int j;
 	char *first;
 	char **stock;
 	char *ret;
+	int *len;
+	int max;
 
-	first = av[0];
+	max = 0;
+	first = strdup(av[0]);
 	*av++;
 	i = 0;
 	stock = malloc(10000);
+	len = malloc(10000);
 	init_stock(stock);
-	printf("1\n");
-	fill_stock(stock, first);
-	printf("2\n");
-	/*while (*av)
+	count = fill_stock(stock, first, len);
+	while (*av)
 	{
-		ret = find(ret, *av);
+		i = 0;
+		while (stock[i])
+		{
+			if (!strstr(*av, stock[i]))
+			{
+				len[i] = 0;	
+				free(stock[i]);
+				//stock[i][0] = 0;
+			}
+			i++;
+		}	
 		av++;
-	}*/
-	while (stock[i])
+	}
+	i = 0;
+	while (i < 100)
 	{
-		printf("%s\n", stock[i]);
+		if (len[i] && len[i] > max)
+			max = len[i];
 		i++;
 	}
-	//write(1, ret, ft_strlen(ret));
+	i = 0;
+	while (count > i)
+	{
+		if (len[i] == max)
+		{
+			write(1, stock[i], max);
+			//printf("%s\n", stock[i]);
+			return;
+		}
+		i++;
+	}
 }
 
 int main(int ac, char **av)
